@@ -68,8 +68,8 @@ function Containers() {
                                     <td className="px-6 py-4">
                                         <span
                                             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${c.state === 'running'
-                                                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]'
-                                                    : 'bg-red-500/10 text-red-400 border-red-500/20'
+                                                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]'
+                                                : 'bg-red-500/10 text-red-400 border-red-500/20'
                                                 }`}
                                         >
                                             {c.state === 'running' && <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full mr-1.5 animate-pulse"></span>}
@@ -81,11 +81,11 @@ function Containers() {
                                         <div className="flex items-center gap-2">
                                             <div className="w-16 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
                                                 <div
-                                                    className={`h-full rounded-full ${paramsToColor(c.cpuPercent)}`}
-                                                    style={{ width: `${Math.min(c.cpuPercent, 100)}%` }}
+                                                    className={`h-full rounded-full ${paramsToColor(c.cpuPercent || 0)}`}
+                                                    style={{ width: `${Math.min(c.cpuPercent || 0, 100)}%` }}
                                                 ></div>
                                             </div>
-                                            {c.cpuPercent.toFixed(2)}%
+                                            {(c.cpuPercent || 0).toFixed(2)}%
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 font-mono text-zinc-300">

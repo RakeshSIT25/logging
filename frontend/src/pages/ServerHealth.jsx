@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from '../api/axios';
-import { Cpu, HardDrive, Database, Activity, Server as ServerIcon } from 'lucide-react';
+import { Cpu, HardDrive, Database, Activity, Server as ServerIcon, Terminal } from 'lucide-react';
 import clsx from 'clsx';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
@@ -77,57 +77,6 @@ function ServerHealth() {
                     </div>
                 </div>
 
-                {/* CPU Usage History Chart */}
-                <div className="bg-zinc-900/50 border border-white/5 p-6 rounded-2xl relative overflow-hidden">
-                    <h3 className="text-lg font-medium text-white mb-6 flex items-center gap-2">
-                        <Activity size={20} className="text-indigo-400" /> CPU Usage History
-                    </h3>
-                    <div className="h-[250px] w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={cpuHistory}>
-                                <defs>
-                                    <linearGradient id="colorCpu" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                                        <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
-                                    </linearGradient>
-                                </defs>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
-                                <XAxis
-                                    dataKey="time"
-                                    tickFormatter={(time) => new Date(time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-                                    stroke="#52525b"
-                                    tick={{ fontSize: 11, fill: '#71717a' }}
-                                    tickLine={false}
-                                    axisLine={false}
-                                    minTickGap={30}
-                                />
-                                <YAxis
-                                    stroke="#52525b"
-                                    tick={{ fontSize: 11, fill: '#71717a' }}
-                                    tickLine={false}
-                                    axisLine={false}
-                                    domain={[0, 100]}
-                                />
-                                <Tooltip
-                                    contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a' }}
-                                    itemStyle={{ color: '#818cf8' }}
-                                    labelFormatter={(label) => new Date(label).toLocaleTimeString()}
-                                    formatter={(value) => [`${value.toFixed(1)}%`, 'CPU Load']}
-                                />
-                                <Area
-                                    type="monotoneX"
-                                    dataKey="value"
-                                    stroke="#6366f1"
-                                    strokeWidth={2}
-                                    fillOpacity={1}
-                                    fill="url(#colorCpu)"
-                                    isAnimationActive={false}
-                                />
-                            </AreaChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
-
                 {/* Primary Metrics Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {/* CPU Summary */}
@@ -184,6 +133,57 @@ function ServerHealth() {
                     </div>
                 </div>
 
+                {/* CPU Usage History Chart */}
+                <div className="bg-zinc-900/50 border border-white/5 p-6 rounded-2xl relative overflow-hidden">
+                    <h3 className="text-lg font-medium text-white mb-6 flex items-center gap-2">
+                        <Activity size={20} className="text-indigo-400" /> CPU Usage History
+                    </h3>
+                    <div className="h-[250px] w-full">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart data={cpuHistory}>
+                                <defs>
+                                    <linearGradient id="colorCpu" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
+                                        <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+                                <XAxis
+                                    dataKey="time"
+                                    tickFormatter={(time) => new Date(time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                                    stroke="#52525b"
+                                    tick={{ fontSize: 11, fill: '#71717a' }}
+                                    tickLine={false}
+                                    axisLine={false}
+                                    minTickGap={30}
+                                />
+                                <YAxis
+                                    stroke="#52525b"
+                                    tick={{ fontSize: 11, fill: '#71717a' }}
+                                    tickLine={false}
+                                    axisLine={false}
+                                    domain={[0, 100]}
+                                />
+                                <Tooltip
+                                    contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a' }}
+                                    itemStyle={{ color: '#818cf8' }}
+                                    labelFormatter={(label) => new Date(label).toLocaleTimeString()}
+                                    formatter={(value) => [`${value.toFixed(1)}%`, 'CPU Load']}
+                                />
+                                <Area
+                                    type="monotoneX"
+                                    dataKey="value"
+                                    stroke="#6366f1"
+                                    strokeWidth={2}
+                                    fillOpacity={1}
+                                    fill="url(#colorCpu)"
+                                    isAnimationActive={false}
+                                />
+                            </AreaChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* CPU Cores Detail */}
                     <div className="lg:col-span-2 bg-zinc-900/50 border border-white/5 rounded-2xl p-6 backdrop-blur-sm">
@@ -226,6 +226,39 @@ function ServerHealth() {
                                     </div>
                                 </div>
                             ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* System Specs */}
+                <div className="bg-zinc-900/50 border border-white/5 rounded-2xl p-6 backdrop-blur-sm mt-8">
+                    <h3 className="text-lg font-medium text-white mb-6 flex items-center gap-2">
+                        <Terminal size={20} className="text-emerald-400" /> Host System Information
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-sm">
+                        <div className="space-y-1">
+                            <span className="text-zinc-500 block text-xs uppercase tracking-wider">OS Platform</span>
+                            <span className="text-zinc-300 font-mono text-sm shadow-black drop-shadow-md">{data.os?.distro || 'Compatible'} {data.os?.release || 'Linux'}</span>
+                        </div>
+                        <div className="space-y-1">
+                            <span className="text-zinc-500 block text-xs uppercase tracking-wider">Kernel Arch</span>
+                            <span className="text-zinc-300 font-mono text-sm">{data.os?.platform || 'linux'} ({data.os?.arch || 'x64'})</span>
+                        </div>
+                        <div className="space-y-1">
+                            <span className="text-zinc-500 block text-xs uppercase tracking-wider">Hostname</span>
+                            <span className="text-zinc-300 font-mono text-sm">{data.os?.hostname || 'localhost'}</span>
+                        </div>
+                        <div className="space-y-1">
+                            <span className="text-zinc-500 block text-xs uppercase tracking-wider">CPU Model</span>
+                            <span className="text-zinc-300 font-mono text-sm">{data.cpuInfo?.brand || 'Generic Source'}</span>
+                        </div>
+                        <div className="space-y-1">
+                            <span className="text-zinc-500 block text-xs uppercase tracking-wider">Manufacturer</span>
+                            <span className="text-zinc-300 font-mono text-sm">{data.system?.manufacturer || 'Standard'} {data.system?.model || 'PC'}</span>
+                        </div>
+                        <div className="space-y-1">
+                            <span className="text-zinc-500 block text-xs uppercase tracking-wider">Cores</span>
+                            <span className="text-zinc-300 font-mono text-sm">{data.cpuInfo?.physicalCores || 4} Physical / {data.cpuInfo?.cores || 8} Threads</span>
                         </div>
                     </div>
                 </div>

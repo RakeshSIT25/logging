@@ -32,7 +32,7 @@ const Analytics = () => {
                         <TrendingUp size={18} className="text-blue-400" /> Log Ingestion Volume
                     </h3>
                     <ResponsiveContainer width="100%" height="90%">
-                        <AreaChart data={stats.trend}>
+                        <AreaChart data={stats.trend} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
                             <defs>
                                 <linearGradient id="colorCountBlue" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
@@ -41,7 +41,7 @@ const Analytics = () => {
                             </defs>
                             <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
                             <XAxis dataKey="time" tickFormatter={t => new Date(t).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} stroke="#52525b" />
-                            <YAxis stroke="#52525b" />
+                            <YAxis stroke="#52525b" padding={{ top: 30 }} />
                             <Tooltip contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a' }} />
                             <Area type="monotone" dataKey="count" stroke="#3b82f6" fillOpacity={1} fill="url(#colorCountBlue)" />
                         </AreaChart>
@@ -77,9 +77,9 @@ const Analytics = () => {
                             <div
                                 key={i}
                                 className={`h-8 rounded-md transition-all hover:scale-110 cursor-pointer ${intensity > 0.8 ? 'bg-emerald-500' :
-                                        intensity > 0.6 ? 'bg-emerald-600/60' :
-                                            intensity > 0.4 ? 'bg-emerald-700/40' :
-                                                'bg-zinc-800'
+                                    intensity > 0.6 ? 'bg-emerald-600/60' :
+                                        intensity > 0.4 ? 'bg-emerald-700/40' :
+                                            'bg-zinc-800'
                                     }`}
                                 title={`Activity Level: ${Math.floor(intensity * 100)}%`}
                             ></div>

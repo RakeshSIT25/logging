@@ -8,10 +8,10 @@ async function getContainerStatus() {
         image: container.image,
         state: container.state,   // running, exited
         status: container.status,
-        cpuPercent: container.cpuPercent,
-        memoryUsageMB: (container.memUsage / 1024 / 1024).toFixed(2),
-        memoryLimitMB: (container.memLimit / 1024 / 1024).toFixed(2),
-        restartCount: container.restartCount
+        cpuPercent: container.cpu_percent || container.cpuPercent || 0,
+        memoryUsageMB: ((container.mem_usage || container.memUsage || 0) / 1024 / 1024).toFixed(2),
+        memoryLimitMB: ((container.mem_limit || container.memLimit || 0) / 1024 / 1024).toFixed(2),
+        restartCount: container.restartCount || 0
     }));
 }
 

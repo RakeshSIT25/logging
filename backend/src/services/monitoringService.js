@@ -30,8 +30,32 @@ const getLiveServerHealth = async (req, res, next) => {
         const cpu = await si.currentLoad();
         const mem = await si.mem();
         const disk = await si.fsSize();
+        const os = await si.osInfo();
+        const system = await si.system();
+        const cpuInfo = await si.cpu();
 
         res.json({
+            system: {
+                manufacturer: system.manufacturer,
+                model: system.model,
+                version: system.version,
+                serial: system.serial,
+                uuid: system.uuid
+            },
+            os: {
+                platform: os.platform,
+                distro: os.distro,
+                release: os.release,
+                hostname: os.hostname,
+                arch: os.arch
+            },
+            cpuInfo: {
+                manufacturer: cpuInfo.manufacturer,
+                brand: cpuInfo.brand,
+                speed: cpuInfo.speed,
+                cores: cpuInfo.cores,
+                physicalCores: cpuInfo.physicalCores
+            },
             cpu: {
                 load: cpu.currentLoad,
                 cores: cpu.cpus.map(c => c.load)
