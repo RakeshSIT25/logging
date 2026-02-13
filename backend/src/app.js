@@ -10,6 +10,11 @@ app.use(morgan('dev')); // Log requests to console
 app.use(cors());
 app.use(express.json());
 
+// Health check
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok', timestamp: new Date() });
+});
+
 // Routes
 app.use('/api', logRoutes);
 
