@@ -8,6 +8,7 @@ router.get('/stats', logController.getStats);
 router.get('/health', logController.getHealth);
 router.get('/services', logController.getServices);
 router.get('/security', logController.getSecurityLogs);
+router.get('/containers', logController.getContainers);
 
 router.get('/server-health', async (req, res) => {
     try {

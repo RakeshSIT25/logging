@@ -1,4 +1,5 @@
 const logService = require('../services/logService');
+const { getContainerStatus } = require('../services/containerMonitoringService');
 
 const createLog = async (req, res, next) => {
     try {
@@ -40,6 +41,15 @@ const getServices = async (req, res, next) => {
     }
 };
 
+const getContainers = async (req, res, next) => {
+    try {
+        const containers = await getContainerStatus();
+        res.json(containers);
+    } catch (err) {
+        next(err);
+    }
+};
+
 const getSecurityLogs = async (req, res, next) => {
     try {
         const logs = await logService.getSecurityLogs(req.query.limit);
@@ -55,5 +65,7 @@ module.exports = {
     getStats,
     getHealth,
     getServices,
-    getSecurityLogs
+    getServices,
+    getSecurityLogs,
+    getContainers
 };

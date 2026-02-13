@@ -65,13 +65,14 @@ const Charts = ({ data }) => {
                     />
                     <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#6366f1', strokeWidth: 1, strokeDasharray: '4 4' }} />
                     <Area
-                        type="monotone"
+                        type="monotoneX"
                         dataKey="count"
                         stroke="#6366f1"
                         strokeWidth={3}
                         fillOpacity={1}
                         fill="url(#colorCount)"
                         isAnimationActive={false}
+                        connectNulls={true}
                     />
                 </AreaChart>
             </ResponsiveContainer>

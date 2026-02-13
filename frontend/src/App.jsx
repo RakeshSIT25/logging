@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react
 import api from './api/axios';
 import StatsCard from './components/StatsCard';
 import Charts from './components/Charts';
-import { LevelPieChart, ServiceBarChart } from './components/MetricCharts';
+import { LevelPieChart } from './components/MetricCharts';
 import LogsTable from './components/LogsTable';
 import LogModal from './components/LogModal';
 import Dashboard from './pages/Dashboard';
@@ -11,7 +11,8 @@ import Services from './pages/Services';
 import Security from './pages/Security';
 import Analytics from './pages/Analytics';
 import ServerHealth from './pages/ServerHealth';
-import { RefreshCw, LayoutDashboard, Terminal, Activity, Server, Shield, ArrowUpRight, Menu, ChevronLeft, Cpu } from 'lucide-react';
+import Containers from './pages/Containers';
+import { RefreshCw, LayoutDashboard, Terminal, Activity, Server, Shield, ArrowUpRight, Menu, ChevronLeft, Cpu, Box } from 'lucide-react';
 import clsx from 'clsx';
 
 function Layout() {
@@ -83,6 +84,13 @@ function Layout() {
                         <Cpu size={18} className="shrink-0" />
                         <span className={clsx("transition-opacity duration-200", !isSidebarOpen && "lg:hidden")}>Server Health</span>
                     </Link>
+                    <Link to="/containers" className={clsx("flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group font-medium whitespace-nowrap",
+                        isActive('/containers') ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 shadow-lg shadow-cyan-500/10" : "text-zinc-400 hover:bg-white/5 hover:text-white",
+                        !isSidebarOpen && "justify-center px-0"
+                    )} title="Containers">
+                        <Box size={18} className="shrink-0" />
+                        <span className={clsx("transition-opacity duration-200", !isSidebarOpen && "lg:hidden")}>Containers</span>
+                    </Link>
                 </nav>
 
                 {/* Collapse Toggle (Desktop) */}
@@ -135,6 +143,7 @@ function Layout() {
                     <Route path="/services" element={<Services />} />
                     <Route path="/security" element={<Security />} />
                     <Route path="/server-health" element={<ServerHealth />} />
+                    <Route path="/containers" element={<Containers />} />
                 </Routes>
             </main>
         </div>
@@ -270,10 +279,7 @@ function DashboardPage() {
                     </div>
                 </div>
 
-                {/* Service Distribution */}
-                <div className="h-[300px] mb-8">
-                    <ServiceBarChart data={stats.services} />
-                </div>
+
 
                 {/* Logs Table */}
                 <div className="min-h-[500px] relative z-0 mb-8">

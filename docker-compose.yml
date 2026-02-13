@@ -32,6 +32,8 @@ services:
     networks:
       - logging_network
       - asi_shared_network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
   frontend:
     build: ./frontend
