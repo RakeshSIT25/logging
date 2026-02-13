@@ -37,7 +37,7 @@ const Services = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {services.map((svc) => (
-                    <div className="bg-zinc-900/40 backdrop-blur-md border border-white/5 rounded-xl p-6 hover:bg-zinc-800/40 transition-all group relative overflow-hidden">
+                    <div key={svc.name} className="bg-zinc-900/40 backdrop-blur-md border border-white/5 rounded-xl p-6 hover:bg-zinc-800/40 transition-all group relative overflow-hidden">
                         <div className={`absolute top-0 right-0 w-24 h-24 blur-3xl rounded-full -mr-10 -mt-10 opacity-20 pointer-events-none ${svc.status === 'healthy' ? 'bg-emerald-500' : 'bg-red-500'
                             }`} />
 

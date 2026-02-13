@@ -85,10 +85,10 @@ function Containers() {
                                             <div className="w-16 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
                                                 <div
                                                     className={`h-full rounded-full ${paramsToColor(c.cpuPercent || 0)}`}
-                                                    style={{ width: `${Math.min(c.cpuPercent || 0, 100)}%` }}
+                                                    style={{ width: `${Math.min(parseFloat(c.cpuPercent || 0), 100)}%` }}
                                                 ></div>
                                             </div>
-                                            {(c.cpuPercent || 0).toFixed(2)}%
+                                            {typeof c.cpuPercent === 'number' ? c.cpuPercent.toFixed(2) : parseFloat(c.cpuPercent || 0).toFixed(2)}%
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 font-mono text-zinc-300">
