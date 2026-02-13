@@ -22,8 +22,8 @@ services:
     environment:
       DB_HOST: db
       DB_USER: postgres
-      DB_PASSWORD: password
-      DB_NAME: logging_platform
+      DB_PASSWORD: root
+      DB_NAME: asi_logging
       DB_PORT: 5432
     depends_on:
       - db
@@ -31,6 +31,7 @@ services:
       - "5000:5000"
     networks:
       - logging_network
+      - asi_shared_network
 
   frontend:
     build: ./frontend
