@@ -150,6 +150,7 @@ function DashboardPage() {
         errorRate: 0,
         trend: []
     });
+    const [serverHealth, setServerHealth] = useState(null);
     const [loading, setLoading] = useState(true);
     const [selectedLog, setSelectedLog] = useState(null);
     const [filters, setFilters] = useState({ search: '', level: '', dateRange: 'all' });
@@ -167,6 +168,14 @@ function DashboardPage() {
             });
 
             const statsRes = await api.get('/stats');
+
+            // Fetch server health separately to not block main load if it fails
+            try {
+                const healthRes = await api.get('/server-health-live');
+                setServerHealth(healthRes.data);
+            } catch (err) {
+                console.error("Failed to fetch server health", err);
+            }
 
             setLogs(logsRes.data.logs);
             setPagination(logsRes.data.pagination);
@@ -190,11 +199,57 @@ function DashboardPage() {
         return () => window.removeEventListener('refresh-data', handler);
     }, []);
 
+    const getHealthColor = (val) => {
+        if (!val && val !== 0) return "text-zinc-500";
+        if (val < 60) return "text-emerald-400";
+        if (val < 80) return "text-orange-400";
+        return "text-red-400";
+    };
+
     return (
         <>
             <div className="flex-1 overflow-y-auto p-8 relative scroll-smooth">
                 {/* Background ambient glow */}
                 <div className="absolute top-0 left-0 w-full h-96 bg-indigo-900/10 blur-[100px] pointer-events-none"></div>
+
+                {/* Server Health Section */}
+                {serverHealth && (
+                    <div className="mb-8 p-6 bg-zinc-900/40 border border-white/5 rounded-2xl relative z-0 backdrop-blur-sm">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-zinc-400 font-medium flex items-center gap-2">
+                                <Cpu size={18} className="text-indigo-400" /> Server Health Status
+                            </h3>
+                            <div className="text-xs text-zinc-500 bg-white/5 px-2 py-1 rounded">Live Metrics</div>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="flex flex-col">
+                                <span className="text-zinc-500 text-xs uppercase tracking-wider font-medium mb-1">CPU Load</span>
+                                <span className={`text-2xl font-bold ${getHealthColor(serverHealth.cpu.load)}`}>
+                                    {serverHealth.cpu.load?.toFixed(1)}%
+                                </span>
+                                <div className="w-full bg-zinc-800 h-1 mt-2 rounded-full overflow-hidden">
+                                    <div className={`h-full ${serverHealth.cpu.load < 60 ? 'bg-emerald-500' : serverHealth.cpu.load < 80 ? 'bg-orange-500' : 'bg-red-500'}`} style={{ width: `${serverHealth.cpu.load}%` }}></div>
+                                </div>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-zinc-500 text-xs uppercase tracking-wider font-medium mb-1">Memory Usage</span>
+                                <span className={`text-2xl font-bold ${getHealthColor(serverHealth.memory.percentage)}`}>
+                                    {serverHealth.memory.percentage?.toFixed(1)}%
+                                </span>
+                                <div className="w-full bg-zinc-800 h-1 mt-2 rounded-full overflow-hidden">
+                                    <div className={`h-full ${serverHealth.memory.percentage < 60 ? 'bg-emerald-500' : serverHealth.memory.percentage < 80 ? 'bg-orange-500' : 'bg-red-500'}`} style={{ width: `${serverHealth.memory.percentage}%` }}></div>
+                                </div>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-zinc-500 text-xs uppercase tracking-wider font-medium mb-1">Uptime</span>
+                                <span className="text-2xl font-bold text-blue-400">
+                                    {(serverHealth.uptime / 3600).toFixed(2)}h
+                                </span>
+                                <div className="text-xs text-zinc-600 mt-2">Active running time</div>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 relative z-0">
                     <StatsCard title="Total Logs (All Time)" value={stats.total.toLocaleString()} type="total" />
