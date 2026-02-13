@@ -1,0 +1,52 @@
+<svg width="1400" height="1000" viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg"><style>.box {
+    fill: #111827;
+    stroke: #3b82f6;
+    stroke-width: 2;
+    rx: 8;
+}
+
+.decision {
+    fill: #1f2937;
+    stroke: #f59e0b;
+    stroke-width: 2;
+}
+
+.fail-box {
+    fill: #451a1a;
+    stroke: #ef4444;
+    stroke-width: 2;
+    rx: 8;
+}
+
+.text {
+    fill: #f3f4f6;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+}
+
+.text-bold {
+    font-weight: bold;
+}
+
+.title {
+    fill: #22c55e;
+    font-family: sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.arrow {
+    stroke: #9ca3af;
+    stroke-width: 2;
+    fill: none;
+    marker-end: url(#arrowhead);
+}
+
+.arrow-fail {
+    stroke: #ef4444;
+    stroke-width: 2;
+    fill: none;
+    marker-end: url(#arrowhead-fail);
+}
+
+</style><defs><marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#9ca3af" /></marker><marker id="arrowhead-fail" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#ef4444" /></marker></defs><text x="700" y="50" class="title" text-anchor="middle">ASI Dashboard: Full CI/CD+Testing+Rollback+Monitoring Flow </text><rect x="50" y="120" width="200" height="70" class="box" /><text x="150" y="145" class="text text-bold" text-anchor="middle">Developer</text><text x="150" y="165" class="text" text-anchor="middle">git push main</text><rect x="350" y="120" width="220" height="70" class="box" /><text x="460" y="160" class="text text-bold" text-anchor="middle">GitHub Repository</text><rect x="350" y="240" width="220" height="100" class="box" /><text x="460" y="265" class="text text-bold" text-anchor="middle">CI - Testing Stage</text><text x="370" y="290" class="text">• Backend (npm test)</text><text x="370" y="310" class="text">• Frontend (flutter test)</text><polygon points="750,240 850,290 750,340 650,290" class="decision" /><text x="750" y="295" class="text" text-anchor="middle">Tests Pass?</text><rect x="350" y="400" width="220" height="90" class="box" /><text x="460" y="425" class="text text-bold" text-anchor="middle">Build Docker Images</text><text x="370" y="450" class="text">• Tag with Commit SHA</text><text x="370" y="470" class="text">• Multi-stage Build</text><rect x="700" y="405" width="200" height="80" class="box" /><text x="800" y="435" class="text text-bold" text-anchor="middle">AWS ECR</text><text x="800" y="455" class="text" text-anchor="middle">Immutable Versioning</text><rect x="350" y="540" width="220" height="110" class="box" /><text x="460" y="565" class="text text-bold" text-anchor="middle">CD - Deployment</text><text x="370" y="590" class="text">• SSH to EC2</text><text x="370" y="610" class="text">• Docker Compose Pull</text><text x="370" y="630" class="text">• Container Refresh</text><rect x="350" y="700" width="220" height="70" class="box" /><text x="460" y="730" class="text text-bold" text-anchor="middle">Health Check</text><text x="460" y="750" class="text" text-anchor="middle">GET /health</text><polygon points="750,685 850,735 750,785 650,735" class="decision" /><text x="750" y="740" class="text" text-anchor="middle">Healthy?</text><rect x="950" y="685" width="220" height="100" class="fail-box" /><text x="1060" y="715" class="text text-bold" text-anchor="middle">Automatic Rollback</text><text x="970" y="740" class="text">• Fetch Previous SHA</text><text x="970" y="760" class="text">• Revert to Stable Tag</text><rect x="350" y="840" width="220" height="100" class="box" /><text x="460" y="865" class="text text-bold" text-anchor="middle">EC2: Live Environment</text><text x="370" y="890" class="text">• Node.js / Flutter Web</text><text x="370" y="910" class="text">• PostgreSQL Instance</text><rect x="700" y="840" width="220" height="100" class="box" /><text x="810" y="865" class="text text-bold" text-anchor="middle">Logging Service</text><text x="720" y="890" class="text">• Pino Log Aggregation</text><text x="720" y="910" class="text">• CloudWatch / ELK</text><path d="M 250,155 L 350,155" class="arrow" /><path d="M 460,190 L 460,240" class="arrow" /><path d="M 570,290 L 650,290" class="arrow" /><path d="M 750,340 L 750,370 L 460,370 L 460,400" class="arrow" /><path d="M 570,445 L 700,445" class="arrow" /><path d="M 800,485 L 800,515 L 460,515 L 460,540" class="arrow" /><path d="M 460,650 L 460,700" class="arrow" /><path d="M 570,735 L 650,735" class="arrow" /><path d="M 850,735 L 950,735" class="arrow-fail" /><path d="M 750,785 L 750,815 L 460,815 L 460,840" class="arrow" /><path d="M 572,890 L 700,890" class="arrow" /></svg>
