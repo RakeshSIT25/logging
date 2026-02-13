@@ -8,8 +8,8 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: asi_logging
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: logging_platform
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
@@ -52,5 +52,3 @@ volumes:
 networks:
   logging_network:
     driver: bridge
-  asi_shared_network:
-    external: true
