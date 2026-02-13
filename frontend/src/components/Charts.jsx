@@ -37,7 +37,7 @@ const Charts = ({ data }) => {
             </div>
 
             <ResponsiveContainer width="100%" height="85%">
-                <AreaChart data={data}>
+                <AreaChart data={data} margin={{ top: 20, right: 20, left: 10, bottom: 0 }}>
                     <defs>
                         <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
@@ -61,6 +61,7 @@ const Charts = ({ data }) => {
                         tickLine={false}
                         axisLine={false}
                         dx={-10}
+                        padding={{ top: 20 }}
                     />
                     <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#6366f1', strokeWidth: 1, strokeDasharray: '4 4' }} />
                     <Area

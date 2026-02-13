@@ -9,4 +9,19 @@ router.get('/health', logController.getHealth);
 router.get('/services', logController.getServices);
 router.get('/security', logController.getSecurityLogs);
 
+router.get('/server-health', async (req, res) => {
+    try {
+        const pool = require('../db').pool;
+        const result = await pool.query(
+            `SELECT * FROM server_metrics ORDER BY created_at DESC LIMIT 1`
+        );
+        res.json(result.rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+const { getLiveServerHealth } = require('../services/monitoringService');
+router.get('/server-health-live', getLiveServerHealth);
+
 module.exports = router;

@@ -127,14 +127,14 @@ const LogsTable = ({ logs, onLogClick, filters, setFilters, pagination, setPage,
                 </span>
                 <div className="flex gap-1">
                     <button
-                        onClick={() => setPage(p => Math.max(1, p - 1))}
+                        onClick={() => setPage(Math.max(1, pagination.page - 1))}
                         disabled={pagination.page === 1}
                         className="p-1.5 rounded-md hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-zinc-400 hover:text-white"
                     >
                         <ChevronLeft size={16} />
                     </button>
                     <button
-                        onClick={() => setPage(p => p + 1)}
+                        onClick={() => setPage(pagination.page + 1)}
                         disabled={pagination.page >= pagination.totalPages}
                         className="p-1.5 rounded-md hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-zinc-400 hover:text-white"
                     >

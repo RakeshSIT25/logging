@@ -24,6 +24,15 @@ const initializeDB = async () => {
       CREATE INDEX IF NOT EXISTS idx_logs_timestamp ON logs(timestamp);
       CREATE INDEX IF NOT EXISTS idx_logs_level ON logs(level);
       CREATE INDEX IF NOT EXISTS idx_logs_service ON logs(service);
+      
+      CREATE TABLE IF NOT EXISTS server_metrics (
+        id SERIAL PRIMARY KEY,
+        cpu_usage FLOAT,
+        memory_usage FLOAT,
+        disk_usage FLOAT,
+        uptime FLOAT,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
     `);
     console.log('Database initialized successfully');
   } catch (err) {

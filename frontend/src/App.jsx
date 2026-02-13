@@ -3,13 +3,15 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react
 import api from './api/axios';
 import StatsCard from './components/StatsCard';
 import Charts from './components/Charts';
+import { LevelPieChart, ServiceBarChart } from './components/MetricCharts';
 import LogsTable from './components/LogsTable';
 import LogModal from './components/LogModal';
 import Dashboard from './pages/Dashboard';
 import Services from './pages/Services';
 import Security from './pages/Security';
 import Analytics from './pages/Analytics';
-import { RefreshCw, LayoutDashboard, Terminal, Activity, Server, Shield, ArrowUpRight, Menu, ChevronLeft } from 'lucide-react';
+import ServerHealth from './pages/ServerHealth';
+import { RefreshCw, LayoutDashboard, Terminal, Activity, Server, Shield, ArrowUpRight, Menu, ChevronLeft, Cpu } from 'lucide-react';
 import clsx from 'clsx';
 
 function Layout() {
@@ -74,6 +76,13 @@ function Layout() {
                         <Shield size={18} className="shrink-0" />
                         <span className={clsx("transition-opacity duration-200", !isSidebarOpen && "lg:hidden")}>Security</span>
                     </Link>
+                    <Link to="/server-health" className={clsx("flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group font-medium whitespace-nowrap",
+                        isActive('/server-health') ? "bg-orange-500/10 text-orange-400 border border-orange-500/20 shadow-lg shadow-orange-500/10" : "text-zinc-400 hover:bg-white/5 hover:text-white",
+                        !isSidebarOpen && "justify-center px-0"
+                    )} title="Server Health">
+                        <Cpu size={18} className="shrink-0" />
+                        <span className={clsx("transition-opacity duration-200", !isSidebarOpen && "lg:hidden")}>Server Health</span>
+                    </Link>
                 </nav>
 
                 {/* Collapse Toggle (Desktop) */}
@@ -125,6 +134,7 @@ function Layout() {
                     <Route path="/analytics" element={<Analytics />} />
                     <Route path="/services" element={<Services />} />
                     <Route path="/security" element={<Security />} />
+                    <Route path="/server-health" element={<ServerHealth />} />
                 </Routes>
             </main>
         </div>
@@ -199,30 +209,15 @@ function DashboardPage() {
                         <Charts data={stats.trend} />
                     </div>
 
-                    {/* Visual Widget */}
-                    <div className="bg-zinc-900/40 backdrop-blur-md border border-white/5 rounded-xl p-6 relative overflow-hidden flex flex-col group hover:border-white/10 transition-colors">
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 blur-3xl rounded-full -mr-20 -mt-20 group-hover:bg-purple-500/20 transition-colors duration-700"></div>
-
-                        <h3 className="text-lg font-semibold text-white mb-6 relative z-10">Service Distribution</h3>
-
-                        <div className="flex-1 flex flex-col gap-4 relative z-10 overflow-y-auto custom-scrollbar pr-2">
-                            {stats.services && stats.services.map((svc, i) => (
-                                <div key={i} className="flex flex-col gap-1">
-                                    <div className="flex justify-between text-xs font-medium text-zinc-400">
-                                        <span>{svc.service}</span>
-                                        <span>{svc.count}</span>
-                                    </div>
-                                    <div className="h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden">
-                                        <div
-                                            className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"
-                                            style={{ width: `${(svc.count / stats.total) * 100}%` }}
-                                        ></div>
-                                    </div>
-                                </div>
-                            ))}
-                            {!stats.services?.length && <p className="text-zinc-500 text-sm">No service data available.</p>}
-                        </div>
+                    {/* Log Level Distribution */}
+                    <div className="h-full">
+                        <LevelPieChart data={stats.levels} />
                     </div>
+                </div>
+
+                {/* Service Distribution */}
+                <div className="h-[300px] mb-8">
+                    <ServiceBarChart data={stats.services} />
                 </div>
 
                 {/* Logs Table */}
