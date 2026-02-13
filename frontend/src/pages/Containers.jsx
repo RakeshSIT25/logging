@@ -69,14 +69,17 @@ function Containers() {
                                         <span
                                             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${c.state === 'running'
                                                 ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]'
-                                                : 'bg-red-500/10 text-red-400 border-red-500/20'
+                                                : c.state === 'exited' || c.state === 'dead'
+                                                    ? 'bg-red-500/10 text-red-400 border-red-500/20'
+                                                    : 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
                                                 }`}
                                         >
-                                            {c.state === 'running' && <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full mr-1.5 animate-pulse"></span>}
-                                            {c.state}
+                                            <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${c.state === 'running' ? 'bg-emerald-400 animate-pulse' : c.state === 'exited' || c.state === 'dead' ? 'bg-red-400' : 'bg-yellow-400'
+                                                }`}></span>
+                                            {c.state === 'exited' ? 'Stopped' : c.state.charAt(0).toUpperCase() + c.state.slice(1)}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 text-zinc-400">{c.status}</td>
+                                    <td className="px-6 py-4 text-zinc-400 text-xs">{c.status}</td>
                                     <td className="px-6 py-4 font-mono text-zinc-300">
                                         <div className="flex items-center gap-2">
                                             <div className="w-16 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
