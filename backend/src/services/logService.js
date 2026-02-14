@@ -132,13 +132,23 @@ class LogService {
                 LIMIT 5
             `);
 
+            // Active Users (last 5 minutes based on userId in meta)
+            const activeUsersResult = await client.query(`
+                SELECT COUNT(DISTINCT meta->>'userId') as count
+                FROM logs
+                WHERE timestamp > NOW() - INTERVAL '5 minutes'
+                AND meta->>'userId' IS NOT NULL
+            `);
+            const activeUsers = parseInt(activeUsersResult.rows[0].count) || 0;
+
             return {
                 total,
                 levels,
                 errorRate,
                 trend: timeTrendResult.rows,
                 services: serviceStatsResult.rows,
-                recentErrors: recentErrorsResult.rows
+                recentErrors: recentErrorsResult.rows,
+                activeUsers
             };
         } finally {
             client.release();

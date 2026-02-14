@@ -62,6 +62,9 @@ function ServerHealth() {
     return (
 
         <div className="flex-1 overflow-y-auto p-8 relative scroll-smooth h-full">
+            {/* Background ambient glow */}
+            <div className="absolute top-0 left-0 w-full h-96 bg-indigo-900/10 blur-[100px] pointer-events-none"></div>
+
             <div className="max-w-7xl mx-auto space-y-8">
                 <div className="flex items-center justify-between mb-8">
                     <div>

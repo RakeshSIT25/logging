@@ -25,7 +25,9 @@ const Services = () => {
     }, []);
 
     return (
-        <div className="p-6">
+        <div className="flex-1 overflow-y-auto p-6 relative scroll-smooth">
+            {/* Background ambient glow */}
+            <div className="absolute top-0 left-0 w-full h-96 bg-blue-900/10 blur-[100px] pointer-events-none"></div>
             <header className="flex justify-between items-center mb-6">
                 <div>
                     <h1 className="text-2xl font-bold text-white flex items-center gap-2">

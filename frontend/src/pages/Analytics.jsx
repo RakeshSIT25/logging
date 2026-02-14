@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, BarChart, Bar, Legend, PieChart, Pie, Cell } from 'recharts';
-import { Activity, TrendingUp, Calendar, Zap, AlertTriangle } from 'lucide-react';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, BarChart, Bar } from 'recharts';
+import { Activity, TrendingUp, Calendar, Zap, AlertTriangle, Users } from 'lucide-react';
 
 const Analytics = () => {
-    const [stats, setStats] = useState({ trend: [], services: [] });
+    const [stats, setStats] = useState({ trend: [], services: [], activeUsers: 0 });
 
     // In a real app we would call a dedicated analytics endpoint, for now simulate with stats
     const fetchAnalytics = async () => {
@@ -17,7 +17,9 @@ const Analytics = () => {
     }, []);
 
     return (
-        <div className="p-6 overflow-y-auto h-full">
+        <div className="flex-1 overflow-y-auto p-6 relative scroll-smooth">
+            {/* Background ambient glow */}
+            <div className="absolute top-0 left-0 w-full h-96 bg-emerald-900/10 blur-[100px] pointer-events-none"></div>
             <header className="mb-8">
                 <h1 className="text-2xl font-bold text-white flex items-center gap-2">
                     <Activity className="text-emerald-400" /> Deep Analytics
@@ -66,38 +68,31 @@ const Analytics = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Log Level Distribution */}
-                <div className="bg-zinc-900/40 backdrop-blur-md border border-white/5 rounded-xl p-6 h-[400px]">
-                    <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                        <Activity size={18} className="text-purple-400" /> Log Level Distribution
-                    </h3>
-                    <ResponsiveContainer width="100%" height="90%">
-                        <PieChart>
-                            <Pie
-                                data={[
-                                    { name: 'Info', value: parseInt(stats.levels?.info) || 0 },
-                                    { name: 'Warning', value: parseInt(stats.levels?.warn) || 0 },
-                                    { name: 'Error', value: parseInt(stats.levels?.error) || 0 },
-                                ].filter(d => d.value > 0)}
-                                cx="50%"
-                                cy="50%"
-                                innerRadius={60}
-                                outerRadius={100}
-                                paddingAngle={5}
-                                dataKey="value"
-                            >
-                                {[
-                                    { name: 'Info', color: '#3b82f6' },
-                                    { name: 'Warning', color: '#eab308' },
-                                    { name: 'Error', color: '#ef4444' },
-                                ].map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={entry.color} />
-                                ))}
-                            </Pie>
-                            <Tooltip contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a' }} />
-                            <Legend />
-                        </PieChart>
-                    </ResponsiveContainer>
+                {/* Live Active Users */}
+                <div className="bg-zinc-900/40 backdrop-blur-md border border-white/5 rounded-xl p-6 h-[400px] flex flex-col items-center justify-center relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-4">
+                        <span className="flex h-3 w-3 relative">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                        </span>
+                    </div>
+
+                    <div className="relative z-10 text-center">
+                        <div className="mb-4 relative inline-block">
+                            <div className="absolute inset-0 bg-indigo-500/20 blur-xl rounded-full animate-pulse"></div>
+                            <Users size={64} className="text-indigo-400 relative z-10" />
+                        </div>
+                        <h3 className="text-zinc-400 text-lg font-medium mb-2">Active Users Now</h3>
+                        <div className="text-6xl font-bold text-white tracking-tighter tabular-nums">
+                            {stats.activeUsers || 0}
+                        </div>
+                        <p className="text-emerald-400 text-sm mt-2 flex items-center justify-center gap-1">
+                            <TrendingUp size={14} /> +12% from last hour
+                        </p>
+                    </div>
+
+                    {/* Decorative wave or particle effect could go here */}
+                    <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-indigo-500/10 to-transparent pointer-events-none"></div>
                 </div>
 
                 {/* Recent Critical Alerts */}

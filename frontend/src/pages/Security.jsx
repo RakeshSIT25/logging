@@ -31,7 +31,10 @@ const Security = () => {
     };
 
     return (
-        <div className="p-6">
+        <div className="flex-1 overflow-y-auto p-6 relative scroll-smooth">
+            {/* Background ambient glow */}
+            <div className="absolute top-0 left-0 w-full h-96 bg-purple-900/10 blur-[100px] pointer-events-none"></div>
+
             <header className="flex justify-between items-center mb-6">
                 <div>
                     <h1 className="text-2xl font-bold text-white flex items-center gap-2">
@@ -47,7 +50,7 @@ const Security = () => {
                 </button>
             </header>
 
-            <div className="bg-zinc-900/40 backdrop-blur-md border border-white/5 rounded-xl overflow-hidden">
+            <div className="bg-zinc-900/40 backdrop-blur-md border border-white/5 rounded-xl overflow-x-auto">
                 <table className="w-full text-left">
                     <thead className="bg-white/5 text-zinc-400 text-xs uppercase font-medium">
                         <tr>
@@ -74,8 +77,8 @@ const Security = () => {
                                 <td className="px-6 py-4 text-zinc-400 truncate max-w-md">{log.message}</td>
                                 <td className="px-6 py-4 text-right">
                                     <span className={`px-2 py-1 rounded text-xs font-bold uppercase ${log.level === 'error' ? 'bg-red-500/10 text-red-500 border border-red-500/20' :
-                                            log.level === 'warn' ? 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20' :
-                                                'bg-blue-500/10 text-blue-500 border border-blue-500/20'
+                                        log.level === 'warn' ? 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20' :
+                                            'bg-blue-500/10 text-blue-500 border border-blue-500/20'
                                         }`}>
                                         {log.level}
                                     </span>

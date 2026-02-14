@@ -8,8 +8,14 @@ async function getContainerStatus() {
             let stats = {};
             if (container.state === 'running') {
                 try {
-                    stats = await si.dockerContainerStats(container.id);
-                    console.log(`Stats for ${container.name}:`, stats);
+                    const detailedStats = await si.dockerContainerStats(container.id);
+                    // dockerContainerStats returns an array even for single ID
+                    if (Array.isArray(detailedStats) && detailedStats.length > 0) {
+                        stats = detailedStats[0];
+                    } else {
+                        stats = detailedStats;
+                    }
+                    console.log(`Stats for ${container.name}:`, JSON.stringify(stats));
                 } catch (e) {
                     console.error(`Failed to fetch stats for ${container.name}`, e);
                 }
@@ -23,7 +29,7 @@ async function getContainerStatus() {
                 cpuPercent: (stats.cpu_percent || 0).toFixed(2),
                 memoryUsageMB: ((stats.mem_usage || 0) / 1024 / 1024).toFixed(2),
                 memoryLimitMB: ((stats.mem_limit || 0) / 1024 / 1024).toFixed(2),
-                restartCount: stats.restartCount || 0
+                restartCount: container.restartCount || 0
             };
         }));
 
