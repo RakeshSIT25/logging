@@ -167,7 +167,7 @@ function DashboardPage() {
     const [selectedLog, setSelectedLog] = useState(null);
     const [filters, setFilters] = useState({ search: '', level: '', dateRange: 'all' });
     const [pagination, setPagination] = useState({ page: 1, limit: 10, totalPages: 1 });
-    const lastCheckedRef = React.useRef(new Date().toISOString());
+    const lastCheckedRef = React.useRef(null);
 
     const fetchData = async () => {
         try {
@@ -192,32 +192,42 @@ function DashboardPage() {
 
             const newLogs = logsRes.data.logs;
 
-            // Check for new error logs
             if (newLogs && newLogs.length > 0) {
-                const latestLog = newLogs[0]; // Assuming logs are sorted DESC
+                const latestLogTimestamp = newLogs[0].timestamp;
 
-                // Only alert if we found a NEW error that occurred after our formatted "last checked" time
-                // We iterate through new logs to find the first error that is newer than our reference
-                for (const log of newLogs) {
-                    if (log.level === 'error' && new Date(log.timestamp) > new Date(lastCheckedRef.current)) {
-                        window.dispatchEvent(new CustomEvent('global-server-error', {
-                            detail: {
-                                type: 'log-error',
-                                message: log.message,
-                                service: log.service,
-                                meta: log.meta,
-                                timestamp: log.timestamp
-                            }
-                        }));
-                        // We only alert on the most recent error to avoid spamming multiple modals
-                        break;
+                // If this is the first load, just set the reference to the latest log time
+                // so we don't alert on past errors.
+                if (lastCheckedRef.current === null) {
+                    lastCheckedRef.current = latestLogTimestamp;
+                } else {
+                    // Check for NEW error logs that arrived after our last check
+                    for (const log of newLogs) {
+                        // If we reach a log that is older or equal to our last check, stop checking
+                        if (new Date(log.timestamp) <= new Date(lastCheckedRef.current)) {
+                            break;
+                        }
+
+                        if (log.level === 'error') {
+                            window.dispatchEvent(new CustomEvent('global-server-error', {
+                                detail: {
+                                    type: 'log-error',
+                                    message: log.message,
+                                    service: log.service,
+                                    meta: log.meta,
+                                    timestamp: log.timestamp
+                                }
+                            }));
+                            // Alert only once per batch to avoid spam
+                            break;
+                        }
                     }
-                }
 
-                // Update reference time to the very latest log we've seen, so we don't re-alert
-                if (new Date(latestLog.timestamp) > new Date(lastCheckedRef.current)) {
-                    lastCheckedRef.current = latestLog.timestamp;
+                    // Update reference to the absolute latest log we've seen
+                    lastCheckedRef.current = latestLogTimestamp;
                 }
+            } else if (lastCheckedRef.current === null) {
+                // If no logs found on first load, set ref to now so we capture future logs
+                lastCheckedRef.current = new Date().toISOString();
             }
 
             setLogs(newLogs);
