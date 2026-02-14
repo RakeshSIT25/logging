@@ -12,6 +12,7 @@ import Security from './pages/Security';
 import Analytics from './pages/Analytics';
 import ServerHealth from './pages/ServerHealth';
 import Containers from './pages/Containers';
+import GlobalErrorModal from './components/GlobalErrorModal';
 import { RefreshCw, LayoutDashboard, Terminal, Activity, Server, Shield, ArrowUpRight, Menu, ChevronLeft, Cpu, Box } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -137,6 +138,7 @@ function Layout() {
                     </div>
                 </header>
 
+                <GlobalErrorModal />
                 <Routes>
                     <Route path="/" element={<DashboardPage />} />
                     <Route path="/analytics" element={<Analytics />} />
