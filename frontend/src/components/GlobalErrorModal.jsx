@@ -17,6 +17,8 @@ const GlobalErrorModal = () => {
 
     if (!error) return null;
 
+    const isLogError = error.type === 'log-error';
+
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
             <div className="bg-zinc-900 border border-red-500/30 rounded-xl shadow-2xl w-full max-w-lg flex flex-col animate-in zoom-in-95 duration-200 relative overflow-hidden">
