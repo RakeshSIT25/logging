@@ -124,12 +124,21 @@ class LogService {
             const errorCount = levels['error'] || 0;
             const errorRate = total > 0 ? ((errorCount / total) * 100).toFixed(2) : 0;
 
+            // Recent error logs
+            const recentErrorsResult = await client.query(`
+                SELECT * FROM logs
+                WHERE level = 'error'
+                ORDER BY timestamp DESC
+                LIMIT 5
+            `);
+
             return {
                 total,
                 levels,
                 errorRate,
                 trend: timeTrendResult.rows,
-                services: serviceStatsResult.rows
+                services: serviceStatsResult.rows,
+                recentErrors: recentErrorsResult.rows
             };
         } finally {
             client.release();

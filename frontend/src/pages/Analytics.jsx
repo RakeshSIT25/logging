@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, BarChart, Bar, Legend } from 'recharts';
-import { Activity, TrendingUp, Calendar, Zap } from 'lucide-react';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, BarChart, Bar, Legend, PieChart, Pie, Cell } from 'recharts';
+import { Activity, TrendingUp, Calendar, Zap, AlertTriangle } from 'lucide-react';
 
 const Analytics = () => {
     const [stats, setStats] = useState({ trend: [], services: [] });
@@ -65,31 +65,61 @@ const Analytics = () => {
                 </div>
             </div>
 
-            {/* Simulated Heatmap / Grid */}
-            <div className="bg-zinc-900/40 backdrop-blur-md border border-white/5 rounded-xl p-6">
-                <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
-                    <Calendar size={18} className="text-zinc-400" /> Activity Heatmap (Simulated)
-                </h3>
-                <div className="grid grid-cols-12 gap-2">
-                    {Array.from({ length: 48 }).map((_, i) => {
-                        const intensity = Math.random();
-                        return (
-                            <div
-                                key={i}
-                                className={`h-8 rounded-md transition-all hover:scale-110 cursor-pointer ${intensity > 0.8 ? 'bg-emerald-500' :
-                                    intensity > 0.6 ? 'bg-emerald-600/60' :
-                                        intensity > 0.4 ? 'bg-emerald-700/40' :
-                                            'bg-zinc-800'
-                                    }`}
-                                title={`Activity Level: ${Math.floor(intensity * 100)}%`}
-                            ></div>
-                        )
-                    })}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Log Level Distribution */}
+                <div className="bg-zinc-900/40 backdrop-blur-md border border-white/5 rounded-xl p-6 h-[400px]">
+                    <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                        <Activity size={18} className="text-purple-400" /> Log Level Distribution
+                    </h3>
+                    <ResponsiveContainer width="100%" height="90%">
+                        <PieChart>
+                            <Pie
+                                data={[
+                                    { name: 'Info', value: parseInt(stats.levels?.info) || 0 },
+                                    { name: 'Warning', value: parseInt(stats.levels?.warn) || 0 },
+                                    { name: 'Error', value: parseInt(stats.levels?.error) || 0 },
+                                ].filter(d => d.value > 0)}
+                                cx="50%"
+                                cy="50%"
+                                innerRadius={60}
+                                outerRadius={100}
+                                paddingAngle={5}
+                                dataKey="value"
+                            >
+                                {[
+                                    { name: 'Info', color: '#3b82f6' },
+                                    { name: 'Warning', color: '#eab308' },
+                                    { name: 'Error', color: '#ef4444' },
+                                ].map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={entry.color} />
+                                ))}
+                            </Pie>
+                            <Tooltip contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a' }} />
+                            <Legend />
+                        </PieChart>
+                    </ResponsiveContainer>
                 </div>
-                <div className="flex justify-between mt-2 text-xs text-zinc-500">
-                    <span>00:00</span>
-                    <span>12:00</span>
-                    <span>23:59</span>
+
+                {/* Recent Critical Alerts */}
+                <div className="bg-zinc-900/40 backdrop-blur-md border border-white/5 rounded-xl p-6 h-[400px] overflow-y-auto">
+                    <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                        <AlertTriangle size={18} className="text-red-400" /> Recent Critical Alerts
+                    </h3>
+                    <div className="space-y-3">
+                        {stats.recentErrors && stats.recentErrors.length > 0 ? (
+                            stats.recentErrors.map((log, i) => (
+                                <div key={i} className="bg-red-500/10 border border-red-500/20 p-3 rounded-lg">
+                                    <div className="flex justify-between items-start mb-1">
+                                        <span className="text-red-400 font-medium text-sm">{log.service}</span>
+                                        <span className="text-zinc-500 text-xs">{new Date(log.timestamp).toLocaleString()}</span>
+                                    </div>
+                                    <p className="text-zinc-300 text-sm line-clamp-2">{log.message}</p>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="text-zinc-500 text-center py-8">No recent critical alerts</div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

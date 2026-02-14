@@ -9,6 +9,7 @@ async function getContainerStatus() {
             if (container.state === 'running') {
                 try {
                     stats = await si.dockerContainerStats(container.id);
+                    console.log(`Stats for ${container.name}:`, stats);
                 } catch (e) {
                     console.error(`Failed to fetch stats for ${container.name}`, e);
                 }
