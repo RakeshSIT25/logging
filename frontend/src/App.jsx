@@ -153,6 +153,7 @@ function Layout() {
 }
 
 // Extracted from original App.jsx
+// Extracted from original App.jsx
 function DashboardPage() {
     const [logs, setLogs] = useState([]);
     const [stats, setStats] = useState({
@@ -166,6 +167,7 @@ function DashboardPage() {
     const [selectedLog, setSelectedLog] = useState(null);
     const [filters, setFilters] = useState({ search: '', level: '', dateRange: 'all' });
     const [pagination, setPagination] = useState({ page: 1, limit: 10, totalPages: 1 });
+    const lastCheckedRef = React.useRef(new Date().toISOString());
 
     const fetchData = async () => {
         try {
@@ -188,7 +190,37 @@ function DashboardPage() {
                 console.error("Failed to fetch server health", err);
             }
 
-            setLogs(logsRes.data.logs);
+            const newLogs = logsRes.data.logs;
+
+            // Check for new error logs
+            if (newLogs && newLogs.length > 0) {
+                const latestLog = newLogs[0]; // Assuming logs are sorted DESC
+
+                // Only alert if we found a NEW error that occurred after our formatted "last checked" time
+                // We iterate through new logs to find the first error that is newer than our reference
+                for (const log of newLogs) {
+                    if (log.level === 'error' && new Date(log.timestamp) > new Date(lastCheckedRef.current)) {
+                        window.dispatchEvent(new CustomEvent('global-server-error', {
+                            detail: {
+                                type: 'log-error',
+                                message: log.message,
+                                service: log.service,
+                                meta: log.meta,
+                                timestamp: log.timestamp
+                            }
+                        }));
+                        // We only alert on the most recent error to avoid spamming multiple modals
+                        break;
+                    }
+                }
+
+                // Update reference time to the very latest log we've seen, so we don't re-alert
+                if (new Date(latestLog.timestamp) > new Date(lastCheckedRef.current)) {
+                    lastCheckedRef.current = latestLog.timestamp;
+                }
+            }
+
+            setLogs(newLogs);
             setPagination(logsRes.data.pagination);
             setStats(statsRes.data);
             setLoading(false);

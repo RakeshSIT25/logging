@@ -26,12 +26,20 @@ const GlobalErrorModal = () => {
 
                 <div className="flex items-center justify-between p-6 border-b border-white/5">
                     <div className="flex items-center gap-3">
-                        <div className="p-2 bg-red-500/10 rounded-lg border border-red-500/20">
-                            <ServerCrash size={24} className="text-red-500" />
+                        <div className={`p-2 rounded-lg border ${isLogError ? 'bg-orange-500/10 border-orange-500/20' : 'bg-red-500/10 border-red-500/20'}`}>
+                            {isLogError ? (
+                                <AlertTriangle size={24} className="text-orange-500" />
+                            ) : (
+                                <ServerCrash size={24} className="text-red-500" />
+                            )}
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold text-white">Server Error</h2>
-                            <p className="text-xs text-red-400 font-mono mt-0.5">500 INTERNAL SERVER ERROR</p>
+                            <h2 className="text-xl font-bold text-white">
+                                {error.type === 'log-error' ? 'Critical Application Error' : 'Server Error'}
+                            </h2>
+                            <p className="text-xs text-red-400 font-mono mt-0.5">
+                                {error.type === 'log-error' ? (error.service ? `SERVICE: ${error.service.toUpperCase()}` : 'CRITICAL ALERT') : '500 INTERNAL SERVER ERROR'}
+                            </p>
                         </div>
                     </div>
                     <button
@@ -47,8 +55,13 @@ const GlobalErrorModal = () => {
                         <AlertTriangle className="text-orange-400 shrink-0 mt-1" size={20} />
                         <div className="space-y-2">
                             <p className="text-zinc-300 text-sm leading-relaxed">
-                                An unexpected error occurred on the server. The system has logged this incident.
+                                {error.type === 'log-error'
+                                    ? "A critical error log was detected in the system stream."
+                                    : "An unexpected error occurred on the server. The system has logged this incident."}
                             </p>
+                            {error.timestamp && (
+                                <p className="text-zinc-500 text-xs">Encoded Time: {new Date(error.timestamp).toLocaleString()}</p>
+                            )}
                         </div>
                     </div>
 
@@ -63,6 +76,14 @@ const GlobalErrorModal = () => {
                                 <div className="text-xs text-zinc-500 font-mono whitespace-pre-wrap overflow-x-auto">
                                     {error.stack}
                                 </div>
+                            </div>
+                        )}
+                        {error.meta && (
+                            <div className="mt-4 pt-4 border-t border-white/5">
+                                <span className="text-zinc-600 text-xs uppercase tracking-wider font-semibold block mb-2">Metadata</span>
+                                <pre className="text-xs text-zinc-500 font-mono whitespace-pre-wrap overflow-x-auto">
+                                    {JSON.stringify(error.meta, null, 2)}
+                                </pre>
                             </div>
                         )}
                     </div>
