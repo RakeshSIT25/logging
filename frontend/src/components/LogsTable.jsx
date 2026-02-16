@@ -27,13 +27,37 @@ const LogsTable = ({ logs, onLogClick, filters, setFilters, pagination, setPage,
                     <h3 className="text-sm font-semibold text-zinc-200 tracking-wide uppercase">Live Logs</h3>
                 </div>
 
-                <div className="flex gap-3">
+                <div className="flex flex-wrap gap-3 items-center">
+                    {/* Date Filters */}
+                    <div className="flex items-center gap-2 bg-black/20 border border-white/10 rounded-lg px-2 py-1">
+                        <div className="relative group">
+                            <Clock className="absolute left-2 top-1/2 -translate-y-1/2 text-zinc-500" size={14} />
+                            <input
+                                type="datetime-local"
+                                className="bg-transparent text-zinc-300 text-xs border-none focus:ring-0 pl-7 pr-1 py-1 w-[180px] placeholder:text-zinc-600 [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:opacity-50 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                                placeholder="Start Date"
+                                value={filters.startDate || ''}
+                                onChange={(e) => setFilters(prev => ({ ...prev, startDate: e.target.value }))}
+                            />
+                        </div>
+                        <span className="text-zinc-600">-</span>
+                        <div className="relative group">
+                            <input
+                                type="datetime-local"
+                                className="bg-transparent text-zinc-300 text-xs border-none focus:ring-0 pl-1 pr-1 py-1 w-[170px] placeholder:text-zinc-600 [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:opacity-50 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                                placeholder="End Date"
+                                value={filters.endDate || ''}
+                                onChange={(e) => setFilters(prev => ({ ...prev, endDate: e.target.value }))}
+                            />
+                        </div>
+                    </div>
+
                     <div className="relative group">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-indigo-400 transition-colors" size={14} />
                         <input
                             type="text"
                             placeholder="Search logs..."
-                            className="bg-black/20 border border-white/10 text-zinc-300 text-xs rounded-lg pl-9 pr-4 py-2 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 w-64 transition-all placeholder:text-zinc-600 font-mono"
+                            className="bg-black/20 border border-white/10 text-zinc-300 text-xs rounded-lg pl-9 pr-4 py-2 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 w-48 transition-all placeholder:text-zinc-600 font-mono"
                             value={filters.search || ''}
                             onChange={handleSearch}
                         />

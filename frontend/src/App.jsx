@@ -176,7 +176,9 @@ function DashboardPage() {
                     page: pagination.page,
                     limit: pagination.limit,
                     level: filters.level,
-                    search: filters.search
+                    search: filters.search,
+                    startDate: filters.startDate,
+                    endDate: filters.endDate
                 }
             });
 

@@ -124,6 +124,27 @@ class LogService {
             const errorCount = levels['error'] || 0;
             const errorRate = total > 0 ? ((errorCount / total) * 100).toFixed(2) : 0;
 
+            // Process trend to fill in missing minutes with 0
+            const trendMap = new Map();
+            timeTrendResult.rows.forEach(row => {
+                trendMap.set(new Date(row.time).getTime(), parseInt(row.count));
+            });
+
+            const trend = [];
+            const now = new Date();
+            // Round down to current minute
+            now.setSeconds(0, 0);
+
+            // Go back 60 minutes
+            for (let i = 60; i >= 0; i--) {
+                const t = new Date(now.getTime() - i * 60000);
+                const timeKey = t.getTime();
+                trend.push({
+                    time: t.toISOString(),
+                    count: trendMap.get(timeKey) || 0
+                });
+            }
+
             // Recent error logs
             const recentErrorsResult = await client.query(`
                 SELECT * FROM logs
@@ -145,7 +166,7 @@ class LogService {
                 total,
                 levels,
                 errorRate,
-                trend: timeTrendResult.rows,
+                trend: trend,
                 services: serviceStatsResult.rows,
                 recentErrors: recentErrorsResult.rows,
                 activeUsers
