@@ -15,11 +15,21 @@ import Containers from './pages/Containers';
 import GlobalErrorModal from './components/GlobalErrorModal';
 import { RefreshCw, LayoutDashboard, Terminal, Activity, Server, Shield, ArrowUpRight, Menu, ChevronLeft, Cpu, Box } from 'lucide-react';
 import clsx from 'clsx';
+import logger from './utils/logger';
 
 function Layout() {
     const location = useLocation();
     const [loading, setLoading] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+    useEffect(() => {
+        logger.info(`Frontend initialized`, { path: location.pathname });
+    }, []);
+
+    // Log navigation events
+    useEffect(() => {
+        logger.info(`Navigated to ${location.pathname}`, { path: location.pathname });
+    }, [location.pathname]);
 
     // Common refresh logic could go here
     const handleRefresh = () => {

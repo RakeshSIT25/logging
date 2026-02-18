@@ -116,11 +116,13 @@ const LogsTable = ({ logs, onLogClick, filters, setFilters, pagination, setPage,
                                     onClick={() => onLogClick(log)}
                                     className="group hover:bg-white/[0.02] cursor-pointer transition-all duration-75"
                                 >
-                                    <td className="px-6 py-3 whitespace-nowrap text-zinc-500 group-hover:text-zinc-400">
+                                    <td className="px-6 py-3 whitespace-nowrap text-zinc-500 group-hover:text-zinc-400 font-mono">
                                         <div className="flex items-center gap-2">
                                             <Clock size={12} className="opacity-50" />
-                                            {new Date(log.timestamp).toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-                                            <span className="text-[10px] text-zinc-700">.{new Date(log.timestamp).getMilliseconds()}</span>
+                                            <span>
+                                                {new Date(log.timestamp).toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                                                <span className="text-[10px] text-zinc-700">.{String(new Date(log.timestamp).getMilliseconds()).padStart(3, '0')}</span>
+                                            </span>
                                         </div>
                                     </td>
                                     <td className="px-6 py-3 whitespace-nowrap">
